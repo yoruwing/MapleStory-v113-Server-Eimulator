@@ -49,6 +49,7 @@ import tools.packet.PetPacket;
 public class World {
 
     public static boolean isShutDown = false;
+
     //Touch everything...
     public static void init() {
         World.Find.findChannel(0);
@@ -131,10 +132,10 @@ public class World {
         }
         return false;
     }
-	
-	public static HiredFishing hasFishing(int accountID) {
+
+    public static HiredFishing hasFishing(int accountID) {
         for (ChannelServer cs : ChannelServer.getAllInstances()) {
-			final HiredFishing fishing = cs.containsFishing(accountID);
+            final HiredFishing fishing = cs.containsFishing(accountID);
             if (fishing != null) {
                 return fishing;
             }
@@ -1234,7 +1235,8 @@ public class World {
             }
         }
     }
-	public static class Client {
+
+    public static class Client {
 
         private static final ArrayList<MapleClient> clients = new ArrayList();
 
@@ -1252,6 +1254,7 @@ public class World {
             return clients;
         }
     }
+
     public static class Family {
 
         private static final Map<Integer, MapleFamily> families = new LinkedHashMap<Integer, MapleFamily>();
@@ -1422,6 +1425,10 @@ public class World {
             if (m.startTime + m.length < now) {
                 chr.dispelDebuff(m.disease);
             }
+        }
+
+        if (numTimes % 3 == 0) {
+            chr.handleAutoPotion();
         }
         if (numTimes % 20 == 0) { //we're parsing through the characters anyway (:
             for (MaplePet pet : chr.getPets()) {

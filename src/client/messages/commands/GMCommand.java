@@ -88,6 +88,7 @@ import tools.StringUtil;
 import tools.packet.MobPacket;
 import tools.packet.PlayerShopPacket;
 import com.mysql.jdbc.Connection;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -398,6 +399,39 @@ public class GMCommand {
                 }
             }
             return 1;
+        }
+    }
+
+    public static class potion extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            int hpToHeal, hpPotion, mpToHeal, mpPotion;
+            if (splitted.length < 5) {
+                c.getPlayer().dropMessage(getHint());
+                return 1;
+            }
+            Pattern pattern = Pattern.compile("-?[0-9]+(\\\\.[0-9]+)?");
+            for (int i = 1; i < 5; i++) {
+                if (!pattern.matcher(splitted[i]).matches()) {
+                    c.getPlayer().dropMessage(getHint());
+                    return 1;
+                }
+            }
+            hpToHeal = Integer.valueOf(splitted[1]);
+            hpPotion = Integer.valueOf(splitted[2]);
+            mpToHeal = Integer.valueOf(splitted[3]);
+            mpPotion = Integer.valueOf(splitted[4]);
+            c.getPlayer().setHpToHeal(hpToHeal);
+            c.getPlayer().setHpPotion(hpPotion);
+            c.getPlayer().setMpToHeal(mpToHeal);
+            c.getPlayer().setMpPotion(mpPotion);
+            c.getPlayer().dropMessage(hpToHeal + "/" + hpPotion + "/" + mpToHeal + "/" + mpPotion);
+            return 1;
+        }
+
+        public String getHint() {
+            return "!potion <最低HP> <HP藥水代碼> <最低MP> <MP藥水代碼>";
         }
     }
 

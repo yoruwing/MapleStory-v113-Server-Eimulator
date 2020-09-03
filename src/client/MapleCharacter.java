@@ -142,7 +142,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             guildid = 0, fallcounter = 0, maplepoints, acash, chair, itemEffect, points, vpoints,
             rank = 1, rankMove = 0, jobRank = 1, jobRankMove = 0, marriageId, marriageItemId = 0,
             currentrep, totalrep, linkMid = 0, coconutteam = 0, followid = 0, battleshipHP = 0,
-            gachexp, challenge, guildContribution = 0,
+            gachexp, challenge, guildContribution = 0, hpToHeal, hpPotion, mpToHeal, mpPotion,
             expression, constellation, blood, month, day, beans, beansNum, beansRange, prefix;
     private boolean canSetBeansNum;
     private Point old = new Point(0, 0);
@@ -359,6 +359,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         ret.month = ct.month;
         ret.day = ct.day;
         ret.gachexp = ct.gachexp;
+        ret.hpToHeal = ct.hpToHeal;
+        ret.hpPotion = ct.hpPotion;
+        ret.mpToHeal = ct.mpToHeal;
+        ret.mpPotion = ct.mpPotion;
         ret.makeMFC(ct.familyid, ct.seniorid, ct.junior1, ct.junior2);
         if (ret.guildid > 0) {
             ret.mgc = new MapleGuildCharacter(ret);
@@ -850,7 +854,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             con.setAutoCommit(false);
 
-            ps = con.prepareStatement("INSERT INTO characters (level, fame, str, dex, luk, `int`, exp, hp, mp, maxhp, maxmp, sp, ap, gm, skincolor, gender, job, subJob, hair, face, map, meso, hpApUsed, spawnpoint, party, buddyCapacity, monsterbookcover, dojo_pts, dojoRecord, pets, subcategory, marriageId, currentrep, totalrep, prefix, accountid, name, world) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", DatabaseConnection.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement("INSERT INTO characters (level, fame, str, dex, luk, `int`, exp, hp, mp, maxhp, maxmp, sp, ap, gm, skincolor, gender, job, subJob, hair, face, map, meso, hpApUsed, spawnpoint, party, buddyCapacity, monsterbookcover, dojo_pts, dojoRecord, pets, subcategory, marriageId, currentrep, totalrep, prefix, accountid, name, world, hptoheal, hppotion, mptoheal, mppotion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", DatabaseConnection.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, 1); // Level
             ps.setShort(2, (short) 0); // Fame
@@ -891,6 +895,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setInt(36, chr.getAccountID());
             ps.setString(37, chr.name);
             ps.setByte(38, chr.world);
+            ps.setInt(39, 0);
+            ps.setInt(40, 0);
+            ps.setInt(41, 0);
+            ps.setInt(42, 0);
+
             ps.executeUpdate();
 
             rs = ps.getGeneratedKeys();
@@ -1016,7 +1025,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             con.setAutoCommit(false);
 
-            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, subjob = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, name = ?, gachexp = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, subjob = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, name = ?, gachexp = ?, hptoheal = ?, hppotion = ?, mptoheal= ?, mppotion = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
             ps.setInt(1, level);
             ps.setShort(2, fame);
             ps.setShort(3, stats.getStr());
@@ -1096,7 +1105,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setInt(42, prefix);
             ps.setString(43, name);
             ps.setInt(44, gachexp);
-            ps.setInt(45, id);
+            ps.setInt(45, hpToHeal);
+            ps.setInt(46, hpPotion);
+            ps.setInt(47, mpToHeal);
+            ps.setInt(48, mpPotion);
+            ps.setInt(49, id);
 
             if (ps.executeUpdate() < 1) {
                 ps.close();
@@ -5895,6 +5908,55 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             silentPartyUpdate();
             guildUpdate();
             familyUpdate();
+        }
+    }
+
+    public int getHpToHeal() {
+        return hpToHeal;
+    }
+
+    public void setHpToHeal(int val) {
+        hpToHeal = val;
+    }
+
+    public int getHpPotion() {
+        return hpPotion;
+    }
+
+    public void setHpPotion(int pot) {
+        hpPotion = pot;
+    }
+
+    public int getMpToHeal() {
+        return mpToHeal;
+    }
+
+    public void setMpToHeal(int val) {
+        mpToHeal = val;
+    }
+
+    public int getMpPotion() {
+        return mpPotion;
+    }
+
+    public void setMpPotion(int pot) {
+        mpPotion = pot;
+    }
+
+    public void handleAutoPotion() {
+        if (hpToHeal > 0 && hpPotion >= 2000000) {
+            while (hpToHeal >= getStat().getHp() && haveItem(hpPotion, 1)) {
+                MapleItemInformationProvider.getInstance().getItemEffect(hpPotion).applyTo(this);
+                MapleInventoryManipulator.removeById(getClient(), MapleInventoryType.USE, hpPotion, 1, true, false);
+            }
+//            getClient().sendPacket(MaplePacketCreator.musicChange("Item/0" + hpPotion + "/Use")); // lol
+        }
+        if (mpToHeal > 0 && mpPotion >= 2000000) {
+            while (mpToHeal >= getStat().getMp() && haveItem(mpPotion, 1)) {
+                MapleItemInformationProvider.getInstance().getItemEffect(mpPotion).applyTo(this);
+                MapleInventoryManipulator.removeById(getClient(), MapleInventoryType.USE, mpPotion, 1, true, false);
+            }
+//            getClient().sendPacket(MaplePacketCreator.musicChange("Item/0" + hpPotion + "/Use")); // lol
         }
     }
 }

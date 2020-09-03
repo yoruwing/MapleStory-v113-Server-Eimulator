@@ -48,7 +48,7 @@ public class CharacterTransfer implements Externalizable {
             partyid, messengerid, mBookCover, dojo, ACash, MaplePoints,
             mount_itemid, mount_exp, points, vpoints, marriageId,
             familyid, seniorid, junior1, junior2, currentrep, totalrep, expression, constellation, blood, month, day, battleshipHP, prefix,
-            gachexp;
+            gachexp, hpToHeal, hpPotion, mpToHeal, mpPotion;
     public byte channel, dojoRecord, gender, gmLevel, guildrank, alliancerank, clonez, fairyExp, buddysize, world, initialSpawnPoint, skinColor, mount_level, mount_Fatigue, subcategory;
     public long lastfametime, TranferTime;
     public String name, accountname, BlessOfFairy, chalkboard, charmessage;
@@ -127,6 +127,11 @@ public class CharacterTransfer implements Externalizable {
         this.battleshipHP = chr.currentBattleshipHP();
         this.prefix = chr.getPrefix();
         this.gachexp = chr.getGachExp();
+        this.hpToHeal = chr.getHpToHeal();
+        this.hpPotion = chr.getHpPotion();
+        this.mpToHeal = chr.getMpToHeal();
+        this.mpPotion = chr.getMpPotion();
+
         boolean uneq = false;
         for (int i = 0; i < this.petStore.length; i++) {
             final MaplePet pet = chr.getPet(i);
