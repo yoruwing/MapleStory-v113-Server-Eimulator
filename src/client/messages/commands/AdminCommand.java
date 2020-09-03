@@ -89,6 +89,7 @@ import tools.packet.MobPacket;
 import tools.packet.PlayerShopPacket;
 import com.mysql.jdbc.Connection;
 import java.util.concurrent.ScheduledFuture;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -536,11 +537,38 @@ public class AdminCommand {
         }
     }
 
+    public static class spawnRandom extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            int monsterId = -1;
+            if (splitted.length < 2) {
+                c.getPlayer().dropMessage(getHint());
+                return 1;
+            }
+            Pattern pattern = Pattern.compile("-?[0-9]+(\\\\.[0-9]+)?");
+            if (!pattern.matcher(splitted[1]).matches()) {
+                c.getPlayer().dropMessage(getHint());
+                return 1;
+            }
+            monsterId = Integer.valueOf(splitted[1]);
+            Point randPos = c.getPlayer().getMap().getFootholds().getRandomPos();
+            c.getPlayer().getMap().spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(monsterId), randPos);
+            c.getPlayer().changeMapPos(randPos);
+            c.getPlayer().dropMessage(5, "怪物隨機座標: " + randPos);
+            return 1;
+        }
+
+        public String getHint() {
+            return "!spawnRandom <怪物代碼>";
+        }
+    }
+
     public static class WhereAmI extends CommandExecute {
 
         @Override
         public int execute(MapleClient c, String[] splitted) {
-            c.getPlayer().dropMessage(5, "目前地圖 " + c.getPlayer().getMap().getId() + "座標 (" + String.valueOf(c.getPlayer().getPosition().x) + " , " + String.valueOf(c.getPlayer().getPosition().y) + ")");
+            c.getPlayer().dropMessage(5, "目前地圖 " + c.getPlayer().getMap().getId() + " 座標 (" + String.valueOf(c.getPlayer().getPosition().x) + " , " + String.valueOf(c.getPlayer().getPosition().y) + ")");
             return 1;
         }
     }

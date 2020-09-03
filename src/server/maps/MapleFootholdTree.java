@@ -21,9 +21,11 @@
 package server.maps;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import server.Randomizer;
 
 public class MapleFootholdTree {
 
@@ -31,7 +33,7 @@ public class MapleFootholdTree {
     private MapleFootholdTree ne = null;
     private MapleFootholdTree sw = null;
     private MapleFootholdTree se = null;
-    private List<MapleFoothold> footholds = new LinkedList<MapleFoothold>();
+    private List<MapleFoothold> footholds = new LinkedList<>();
     private Point p1;
     private Point p2;
     private Point center;
@@ -232,5 +234,19 @@ public class MapleFootholdTree {
 
     public final int getMinDropX() {
         return minDropX;
+    }
+
+    public final Point getRandomPos() {
+        List<MapleFoothold> sameHeightFootHolds = new ArrayList();
+        for (MapleFoothold fh : footholds) {
+            if (fh.getY1() == fh.getY2()) {
+                sameHeightFootHolds.add(fh);
+            }
+        }
+        if (sameHeightFootHolds.size() > 0) {
+            MapleFoothold fhInfo = sameHeightFootHolds.get(Randomizer.nextInt(sameHeightFootHolds.size()));
+            return new Point(Randomizer.rand(Math.min(fhInfo.getX1(), fhInfo.getX2()), Math.max(fhInfo.getX1(), fhInfo.getX2())), fhInfo.getY1());
+        }
+        return null;
     }
 }

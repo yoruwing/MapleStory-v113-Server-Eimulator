@@ -2353,16 +2353,23 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         changeMap(map, map.getPortal(portal));
     }
 
+    public void changeMapPos(final Point pos) {
+        client.sendPacket(MaplePacketCreator.getWarpToMap(getMap(), 0x81, this, pos));
+        getMap().removePlayer(this);
+        setPosition(pos);
+        getMap().addPlayer(this);
+    }
+
     public void changeMap(final MapleMap to, final Point pos) {
-        changeMapInternal(to, pos, MaplePacketCreator.getWarpToMap(to, 0x81, this), null);
+        changeMapInternal(to, pos, MaplePacketCreator.getWarpToMap(to, 0x81, this, null), null);
     }
 
     public void changeMap(final MapleMap to, final MaplePortal pto) {
-        changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this), null);
+        changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this, null), null);
     }
 
     public void changeMapPortal(final MapleMap to, final MaplePortal pto) {
-        changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this), pto);
+        changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this, null), pto);
     }
 
     private void changeMapInternal(final MapleMap to, final Point pos, MaplePacket warpPacket, final MaplePortal pto) {
