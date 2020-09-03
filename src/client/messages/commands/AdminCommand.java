@@ -129,15 +129,16 @@ public class AdminCommand {
             return 1;
         }
     }
+
     public static class ShutdownTime extends CommandExecute {
 
         private static ScheduledFuture<?> ts = null;
         private int minutesLeft = 0;
-       private static Thread t = null;
+        private static Thread t = null;
 
         public int execute(MapleClient c, String[] splitted) {
             minutesLeft = Integer.parseInt(splitted[1]);
-             c.getPlayer().dropMessage(6, "伺服器即將在" + minutesLeft + "分鐘後關閉. 請盡速關閉精靈商人 並下線.");
+            c.getPlayer().dropMessage(6, "伺服器即將在" + minutesLeft + "分鐘後關閉. 請盡速關閉精靈商人 並下線.");
             if (ts == null && (t == null || !t.isAlive())) {
                 t = new Thread(ShutdownServer.getInstance());
                 ts = EventTimer.getInstance().register(new Runnable() {
@@ -145,10 +146,10 @@ public class AdminCommand {
                     @Override
                     public void run() {
                         if (minutesLeft == 0) {
-			ShutdownServer.getInstance();
+                            ShutdownServer.getInstance();
                             t.start();
                             ts.cancel(false);
-			return;
+                            return;
                         }
                         World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(0, "伺服器即將在 " + minutesLeft + "分鐘後關閉. 請盡速關閉精靈商人 並下線.").getBytes());;
                         System.out.println("伺服器即將在 " + minutesLeft + "分鐘後關閉.");
@@ -161,20 +162,22 @@ public class AdminCommand {
             return 1;
         }
     }
-    public static class saveall extends CommandExecute {
-        private int p = 0;
-        public int execute(MapleClient c, String[] splitted) {      
-			for (ChannelServer cserv : ChannelServer.getAllInstances()) {
-				for (MapleCharacter chr : cserv.getPlayerStorage().getAllCharacters()) {
-					p++;
-					chr.saveToDB(false, true);
-				}
-			}
-			c.getPlayer().dropMessage("[保存] "+p+"個玩家數據保存到數據中.");
-			return 0;
-		}
-    }
 
+    public static class saveall extends CommandExecute {
+
+        private int p = 0;
+
+        public int execute(MapleClient c, String[] splitted) {
+            for (ChannelServer cserv : ChannelServer.getAllInstances()) {
+                for (MapleCharacter chr : cserv.getPlayerStorage().getAllCharacters()) {
+                    p++;
+                    chr.saveToDB(false, true);
+                }
+            }
+            c.getPlayer().dropMessage("[保存] " + p + "個玩家數據保存到數據中.");
+            return 0;
+        }
+    }
 
     public static class LowHP extends CommandExecute {
 
@@ -529,16 +532,6 @@ public class AdminCommand {
             c.getPlayer().setRemainingAp((short) CommandProcessorUtil.getOptionalIntArg(splitted, 1, 1));
             final List<Pair<MapleStat, Integer>> statupdate = new ArrayList<Pair<MapleStat, Integer>>();
             c.sendPacket(MaplePacketCreator.updatePlayerStats(statupdate, c.getPlayer().getJob()));
-            return 1;
-        }
-
-    }
-
-    public static class Job extends CommandExecute {
-
-        @Override
-        public int execute(MapleClient c, String[] splitted) {
-            c.getPlayer().changeJob(Integer.parseInt(splitted[1]));
             return 1;
         }
     }
@@ -1122,7 +1115,7 @@ public class AdminCommand {
                 c.getPlayer().dropMessage(6, "請確認有在正確的頻道");
             } else {
                 chrs.setPoints(chrs.getPoints() + Integer.parseInt(splitted[2]));
-                c.getPlayer().dropMessage(6, "在您給了" + splitted[1] +" " + splitted[2]  + "點了之後 共擁有 " + chrs.getPoints() + " 點");
+                c.getPlayer().dropMessage(6, "在您給了" + splitted[1] + " " + splitted[2] + "點了之後 共擁有 " + chrs.getPoints() + " 點");
             }
             return 1;
         }
@@ -2442,8 +2435,8 @@ public class AdminCommand {
             return 1;
         }
     }
-	
-	public static class PNPC extends CommandExecute {
+
+    public static class PNPC extends CommandExecute {
 
         @Override
         public int execute(MapleClient c, String[] splitted) {
@@ -2456,7 +2449,7 @@ public class AdminCommand {
                 npc.setRx1(c.getPlayer().getPosition().x - 50);
                 npc.setFh(c.getPlayer().getMap().getFootholds().findBelow(c.getPlayer().getPosition()).getId());
                 npc.setCustom(true);
-				
+
                 try {
                     PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO spawns ( idd, f, fh, cy, rx0, rx1, type, x, y, mid ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
                     ps.setInt(1, npcId);
@@ -2470,11 +2463,11 @@ public class AdminCommand {
                     ps.setInt(9, c.getPlayer().getPosition().y);
                     ps.setInt(10, c.getPlayer().getMapId());
                     ps.executeUpdate();
-                   } catch (SQLException SE) {
+                } catch (SQLException SE) {
                     System.err.println("SQL THROW");
                     SE.printStackTrace();
                 }
-				
+
                 c.getPlayer().getMap().addMapObject(npc);
                 c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc, true));
             } else {
@@ -2550,7 +2543,8 @@ public class AdminCommand {
             return 1;
         }
     }
-/*
+
+    /*
     public static class MakeOfflineP extends CommandExecute {
 
         @Override
@@ -2573,7 +2567,7 @@ public class AdminCommand {
             return 1;
         }
     }
-*/
+     */
     public static class DestroyPNPC extends CommandExecute {
 
         @Override
@@ -2600,7 +2594,7 @@ public class AdminCommand {
         @Override
         public int execute(MapleClient c, String[] splitted) {
             Point pos = c.getPlayer().getPosition();
-            c.getPlayer().dropMessage(6, "X: " + pos.x + " | Y: " + pos.y + " | RX0: " + (pos.x + 50) + " | RX1: " + (pos.x - 50) + " | FH: " + c.getPlayer().getFH() + "| CY:"+ pos.y);
+            c.getPlayer().dropMessage(6, "X: " + pos.x + " | Y: " + pos.y + " | RX0: " + (pos.x + 50) + " | RX1: " + (pos.x - 50) + " | FH: " + c.getPlayer().getFH() + "| CY:" + pos.y);
             return 1;
         }
     }
@@ -2986,7 +2980,6 @@ public class AdminCommand {
             return 1;
         }
     }
-
 
     public static class Warp extends CommandExecute {
 

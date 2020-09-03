@@ -47,12 +47,12 @@ public class CharacterTransfer implements Externalizable {
             beans, meso, hair, face, mapid, guildid,
             partyid, messengerid, mBookCover, dojo, ACash, MaplePoints,
             mount_itemid, mount_exp, points, vpoints, marriageId,
-            familyid, seniorid, junior1, junior2, currentrep, totalrep, expression, constellation, blood, month, day, battleshipHP,prefix,
-			gachexp;
+            familyid, seniorid, junior1, junior2, currentrep, totalrep, expression, constellation, blood, month, day, battleshipHP, prefix,
+            gachexp;
     public byte channel, dojoRecord, gender, gmLevel, guildrank, alliancerank, clonez, fairyExp, buddysize, world, initialSpawnPoint, skinColor, mount_level, mount_Fatigue, subcategory;
     public long lastfametime, TranferTime;
     public String name, accountname, BlessOfFairy, chalkboard, charmessage;
-    public short level, fame, str, dex, int_, luk, maxhp, maxmp, hp, mp, remainingAp, hpApUsed, job;
+    public short level, fame, str, dex, int_, luk, maxhp, maxmp, hp, mp, remainingAp, hpApUsed, job, subJob;
     public Object inventorys, skillmacro, storage, cs;
     public int[] savedlocation, wishlist, rocks, remainingSp, regrocks;
     public byte[] petStore;
@@ -63,8 +63,8 @@ public class CharacterTransfer implements Externalizable {
     public final Map<Integer, Object> Quest = new LinkedHashMap<Integer, Object>(); // Questid instead of MapleQuest, as it's huge. Cant be transporting MapleQuest.java
     public Map<Integer, String> InfoQuest = new LinkedHashMap<Integer, String>();
     public final Map<Integer, SkillEntry> Skills = new LinkedHashMap<Integer, SkillEntry>(); // Skillid instead of Skill.java, as it's huge. Cant be transporting Skill.java and MapleStatEffect.java
-    public HiredFishing FishElf ;
-	
+    public HiredFishing FishElf;
+
     public CharacterTransfer() {
     }
 
@@ -96,6 +96,7 @@ public class CharacterTransfer implements Externalizable {
         this.meso = chr.getMeso();
         this.skinColor = chr.getSkinColor();
         this.job = chr.getJob();
+        this.subJob = chr.getSubJob();
         this.hair = chr.getHair();
         this.face = chr.getFace();
         this.mapid = chr.getMapId();
@@ -125,7 +126,7 @@ public class CharacterTransfer implements Externalizable {
         this.day = chr.getday();
         this.battleshipHP = chr.currentBattleshipHP();
         this.prefix = chr.getPrefix();
-		this.gachexp = chr.getGachExp();
+        this.gachexp = chr.getGachExp();
         boolean uneq = false;
         for (int i = 0; i < this.petStore.length; i++) {
             final MaplePet pet = chr.getPet(i);
@@ -194,7 +195,7 @@ public class CharacterTransfer implements Externalizable {
         this.mount_Fatigue = mount.getFatigue();
         this.mount_level = mount.getLevel();
         this.mount_exp = mount.getExp();
-		
+
         //精靈小釣手
         this.FishElf = chr.getPlayerFishing();
         TranferTime = System.currentTimeMillis();

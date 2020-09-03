@@ -15,8 +15,8 @@ import handling.world.World;
 import client.MapleCharacter;
 import client.inventory.MapleInventoryIdentifier;
 import java.sql.SQLException;
+import server.MapleCarnivalChallenge;
 import tools.FileoutputUtil;
-
 
 /**
  *
@@ -60,17 +60,21 @@ public class PlayerCommand {
             return 1;
         }
     }
+
     public static class DropCash extends 丟裝 {
     }
+
     public static class 丟裝 extends OpenNPCCommand {
 
         public 丟裝() {
             npc = 0;
         }
     }
+
     public static class ea extends 查看 {
     }
-        public static class 查看 extends CommandExecute {
+
+    public static class 查看 extends CommandExecute {
 
         @Override
         public int execute(MapleClient c, String[] splitted) {
@@ -82,11 +86,12 @@ public class PlayerCommand {
             return 1;
         }
     }
-        
 
-            public static class mob extends 怪物 {
+    public static class mob extends 怪物 {
     }
-        public static class 怪物 extends CommandExecute {
+
+    public static class 怪物 extends CommandExecute {
+
         @Override
         public int execute(MapleClient c, String[] splitted) {
             MapleMonster mob = null;
@@ -112,12 +117,12 @@ public class PlayerCommand {
                 c.getPlayer().dropMessage(6, "請輸入訊息.");
                 return 1;
             }
-            if (c.getPlayer().isGM()){
+            if (c.getPlayer().isGM()) {
                 c.getPlayer().dropMessage(6, "因為你自己是GM所法使用此指令,可以嘗試!cngm <訊息> 來建立GM聊天頻道~");
                 return 1;
             }
             if (!c.getPlayer().getCheatTracker().GMSpam(100000, 1)) { // 5 minutes.
-                World.Broadcast.broadcastGMMessage(MaplePacketCreator.serverNotice(6, "頻道 " + c.getPlayer().getClient().getChannel() + " 玩家 [" + c.getPlayer().getName()+ "] : " + StringUtil.joinStringFrom(splitted, 1)).getBytes());
+                World.Broadcast.broadcastGMMessage(MaplePacketCreator.serverNotice(6, "頻道 " + c.getPlayer().getClient().getChannel() + " 玩家 [" + c.getPlayer().getName() + "] : " + StringUtil.joinStringFrom(splitted, 1)).getBytes());
                 c.getPlayer().dropMessage(6, "訊息已經寄送給GM了!");
             } else {
                 c.getPlayer().dropMessage(6, "為了防止對GM刷屏所以每1分鐘只能發一次.");
@@ -125,19 +130,29 @@ public class PlayerCommand {
             return 1;
         }
     }
-        
-            public static class help extends 幫助 {
+
+    public static class swap extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            c.getPlayer().changeSubJob(true);
+            c.getPlayer().dropMessage(5, MapleCarnivalChallenge.getJobNameById(c.getPlayer().getJob()) + "/" + MapleCarnivalChallenge.getJobNameById(c.getPlayer().getSubJob()));
+            return 1;
+        }
     }
+
+    public static class help extends 幫助 {
+    }
+
     public static class 幫助 extends CommandExecute {
 
         public int execute(MapleClient c, String[] splitted) {
             c.getPlayer().dropMessage(5, "指令列表 :");
             c.getPlayer().dropMessage(5, "@查看/@ea <解除異常+查看當前狀態>");
             c.getPlayer().dropMessage(5, "@丟裝/@DropCash <丟棄點裝>");
-            c.getPlayer().dropMessage(5, "@怪物/@mob <查看身邊怪物訊息>");      
+            c.getPlayer().dropMessage(5, "@怪物/@mob <查看身邊怪物訊息>");
             c.getPlayer().dropMessage(5, "@CGM 訊息 <傳送訊息給GM>");
 
-            
             return 1;
         }
     }

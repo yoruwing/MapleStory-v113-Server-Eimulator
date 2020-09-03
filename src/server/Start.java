@@ -39,7 +39,9 @@ public class Start {
         } catch (SQLException ex) {
             throw new RuntimeException("[EXCEPTION] Please check if the SQL server is active.");
         }
-
+        if (System.getProperty("net.sf.odinms.wzpath") == null) { // auto initialize path by Windyboy
+            System.setProperty("net.sf.odinms.wzpath", "wz");
+        }
         World.init();
         WorldTimer.getInstance().start();
         EtcTimer.getInstance().start();
@@ -83,7 +85,7 @@ public class Start {
         System.out.println("加載完成 :::");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.gc();
-        PingTimer.getInstance().register(System::gc, 1800000);   
+        PingTimer.getInstance().register(System::gc, 1800000);
     }
 
     public class Shutdown implements Runnable {

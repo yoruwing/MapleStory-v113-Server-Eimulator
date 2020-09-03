@@ -26,7 +26,6 @@ import handling.MapleServerHandler;
 import handling.channel.PlayerStorage;
 import handling.netty.ServerConnection;
 
-
 import server.MTSStorage;
 import server.ServerProperties;
 
@@ -42,10 +41,8 @@ public class CashShopServer {
     public static final void run_startup_configurations() {
         ip = ServerProperties.getProperty("tms.IP") + ":" + PORT;
 
-
-
         try {
-            init = new ServerConnection(PORT,1,-10);//could code world here to seperate them
+            init = new ServerConnection(PORT, 1, -10);//could code world here to seperate them
             init.run();
             players = new PlayerStorage(-10);
             playersMTS = new PlayerStorage(-20);
