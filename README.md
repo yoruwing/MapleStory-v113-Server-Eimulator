@@ -2,6 +2,8 @@ subJob : https://www.youtube.com/watch?v=HJdmkR4R-TY
 
 autoPotion : https://www.youtube.com/watch?v=VEEGS280PYQ
 
+warpRandomPos : https://www.youtube.com/watch?v=eklgL1Za0Wc
+
 
 -----------------------------------------------OLD README here
 # MapleStory-v113-server
