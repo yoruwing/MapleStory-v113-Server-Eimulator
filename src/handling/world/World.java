@@ -1427,9 +1427,7 @@ public class World {
             }
         }
 
-        if (numTimes % 3 == 0) {
-            chr.handleAutoPotion();
-        }
+        chr.handleAutoPotion();
         if (numTimes % 20 == 0) { //we're parsing through the characters anyway (:
             for (MaplePet pet : chr.getPets()) {
                 if (pet.getSummoned()) {
