@@ -141,6 +141,20 @@ public class PlayerCommand {
         }
     }
 
+    public static class reborn extends CommandExecute {
+
+        @Override
+        public int execute(MapleClient c, String[] splitted) {
+            int result = c.getPlayer().doReborn(0);
+            if (result == -1) {
+                c.getPlayer().dropMessage("200等後才能轉生");
+            } else if (result == 1) {
+                c.getPlayer().dropMessage("轉生成功");
+            }
+            return 1;
+        }
+    }
+
     public static class help extends 幫助 {
     }
 

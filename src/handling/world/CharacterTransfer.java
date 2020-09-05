@@ -43,7 +43,7 @@ import java.util.List;
 
 public class CharacterTransfer implements Externalizable {
 
-    public int characterid, accountid, exp,
+    public int characterid, accountid, exp, reborn,
             beans, meso, hair, face, mapid, guildid,
             partyid, messengerid, mBookCover, dojo, ACash, MaplePoints,
             mount_itemid, mount_exp, points, vpoints, marriageId,
@@ -89,6 +89,7 @@ public class CharacterTransfer implements Externalizable {
         this.maxhp = chr.getStat().getMaxHp();
         this.maxmp = chr.getStat().getMaxMp();
         this.exp = chr.getExp();
+        this.reborn = chr.getReborn();
         this.hpApUsed = chr.getHpApUsed();
         this.remainingAp = chr.getRemainingAp();
         this.remainingSp = chr.getRemainingSps();

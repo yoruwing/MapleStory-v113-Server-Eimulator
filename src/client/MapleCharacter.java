@@ -138,7 +138,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private long lastCombo, lastfametime, keydown_skill;
     private byte dojoRecord, gmLevel, gender, initialSpawnPoint, skinColor, guildrank = 5, allianceRank = 5, world, fairyExp = 10, numClones, subcategory; // Make this a quest record, TODO : Transfer it somehow with the current data
     private short level, mulung_energy, combo, availableCP, totalCP, fame, hpApUsed, job, remainingAp, subJob;
-    private int accountid, id, meso, exp, hair, face, mapid, bookCover, dojo,
+    private int accountid, id, meso, exp, hair, face, mapid, bookCover, dojo, reborn,
             guildid = 0, fallcounter = 0, maplepoints, acash, chair, itemEffect, points, vpoints,
             rank = 1, rankMove = 0, jobRank = 1, jobRankMove = 0, marriageId, marriageItemId = 0,
             currentrep, totalrep, linkMid = 0, coconutteam = 0, followid = 0, battleshipHP = 0,
@@ -322,6 +322,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
         ret.stats.hp = ct.hp;
         ret.stats.mp = ct.mp;
 
+        ret.reborn = ct.reborn;
         ret.chalktext = ct.chalkboard;
         ret.exp = ct.exp;
         ret.hpApUsed = ct.hpApUsed;
@@ -488,7 +489,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ret.stats.maxmp = rs.getShort("maxmp");
             ret.stats.hp = rs.getShort("hp");
             ret.stats.mp = rs.getShort("mp");
-
+            ret.reborn = rs.getInt("reborn");
             ret.exp = rs.getInt("exp");
             ret.hpApUsed = rs.getShort("hpApUsed");
             final String[] sp = rs.getString("sp").split(",");
@@ -854,7 +855,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             con.setAutoCommit(false);
 
-            ps = con.prepareStatement("INSERT INTO characters (level, fame, str, dex, luk, `int`, exp, hp, mp, maxhp, maxmp, sp, ap, gm, skincolor, gender, job, subJob, hair, face, map, meso, hpApUsed, spawnpoint, party, buddyCapacity, monsterbookcover, dojo_pts, dojoRecord, pets, subcategory, marriageId, currentrep, totalrep, prefix, accountid, name, world, hptoheal, hppotion, mptoheal, mppotion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", DatabaseConnection.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement("INSERT INTO characters (level, fame, str, dex, luk, `int`, exp, hp, mp, maxhp, maxmp, sp, ap, gm, skincolor, gender, job, subJob, hair, face, map, meso, hpApUsed, spawnpoint, party, buddyCapacity, monsterbookcover, dojo_pts, dojoRecord, pets, subcategory, marriageId, currentrep, totalrep, prefix, accountid, name, world, hptoheal, hppotion, mptoheal, mppotion, reborn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", DatabaseConnection.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, 1); // Level
             ps.setShort(2, (short) 0); // Fame
@@ -899,7 +900,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setInt(40, 0);
             ps.setInt(41, 0);
             ps.setInt(42, 0);
-
+            ps.setInt(43, 0); // reborn
             ps.executeUpdate();
 
             rs = ps.getGeneratedKeys();
@@ -1025,7 +1026,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
             con.setAutoCommit(false);
 
-            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, subjob = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, name = ?, gachexp = ?, hptoheal = ?, hppotion = ?, mptoheal= ?, mppotion = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement("UPDATE characters SET level = ?, fame = ?, str = ?, dex = ?, luk = ?, `int` = ?, exp = ?, hp = ?, mp = ?, maxhp = ?, maxmp = ?, sp = ?, ap = ?, gm = ?, skincolor = ?, gender = ?, job = ?, subjob = ?, hair = ?, face = ?, map = ?, meso = ?, hpApUsed = ?, spawnpoint = ?, party = ?, buddyCapacity = ?, monsterbookcover = ?, dojo_pts = ?, dojoRecord = ?, pets = ?, subcategory = ?, marriageId = ?, currentrep = ?, totalrep = ?, charmessage = ?, expression = ?, constellation = ?, blood = ?, month = ?, day = ?, beans = ?, prefix = ?, name = ?, gachexp = ?, hptoheal = ?, hppotion = ?, mptoheal= ?, mppotion = ?, reborn = ? WHERE id = ?", DatabaseConnection.RETURN_GENERATED_KEYS);
             ps.setInt(1, level);
             ps.setShort(2, fame);
             ps.setShort(3, stats.getStr());
@@ -1109,7 +1110,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             ps.setInt(46, hpPotion);
             ps.setInt(47, mpToHeal);
             ps.setInt(48, mpPotion);
-            ps.setInt(49, id);
+            ps.setInt(49, reborn);
+            ps.setInt(50, id);
 
             if (ps.executeUpdate() < 1) {
                 ps.close();
@@ -5916,6 +5918,35 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             guildUpdate();
             familyUpdate();
         }
+    }
+
+    public void addReborn() {
+        addReborn(1);
+    }
+
+    public void addReborn(int add) {
+        reborn += add;
+    }
+
+    public int getReborn() {
+        return reborn;
+    }
+
+    public int doReborn(int newJob) {
+        if (getLevel() < 200) {
+            return -1;
+        }
+        cancelEffectFromBuffStat(MapleBuffStat.SHADOWPARTNER);
+        // set self
+        addReborn();
+        changeJob(newJob);
+        setLevel((short) 10);
+        setExp(0);
+        List<Pair<MapleStat, Integer>> statList = new ArrayList<Pair<MapleStat, Integer>>(4);
+        statList.add(new Pair(MapleStat.LEVEL, 10));
+        statList.add(new Pair(MapleStat.EXP, 0));
+        getClient().sendPacket(MaplePacketCreator.updatePlayerStats(statList, false, 0));
+        return 1;
     }
 
     public int getHpToHeal() {
