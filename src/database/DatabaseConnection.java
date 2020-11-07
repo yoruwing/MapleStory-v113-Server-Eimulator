@@ -22,6 +22,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -92,7 +94,7 @@ public class DatabaseConnection {
                 return conn;
             }
         } catch (SQLException e) {
-            
+
         }
         return conn;
     }
@@ -100,11 +102,11 @@ public class DatabaseConnection {
     public static final void closeAll() throws SQLException {
         for (final Connection con : ThreadLocalConnection.allConnections) {
             con.close();
-            
+
         }
     }
 
-    public static final Connection NewConnection(){
+    public static final Connection NewConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); // touch the mysql driver
         } catch (final ClassNotFoundException e) {
@@ -122,16 +124,45 @@ public class DatabaseConnection {
             return null;
         }
     }
+
     private static final class ThreadLocalConnection extends ThreadLocal<Connection> {
 
         public static final Collection<Connection> allConnections = new LinkedList<Connection>();
 
         @Override
         protected final Connection initialValue() {
-                final Connection con = NewConnection();
-                if(con != null)
-                    allConnections.add(con);
-                return con;
+            final Connection con = NewConnection();
+            if (con != null) {
+                allConnections.add(con);
+            }
+            return con;
         }
+    }
+
+    public static boolean isExistTable(final String tableName) {
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM `" + tableName + "` LIMIT 1");
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            System.err.println("Error getting table " + e);
+        }
+        return false;
+    }
+
+    public static boolean isExistColumn(final String databaseName, final String tableName, final String columnName) {
+        int ret = -1;
+        try {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT count(*) FROM information_schema.columns WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "' AND column_name = '" + columnName + "'");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ret = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.err.println("Error getting db " + databaseName + " table " + tableName + " colName: " + columnName);
+        }
+        return ret > -1;
     }
 }

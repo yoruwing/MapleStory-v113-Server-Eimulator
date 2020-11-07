@@ -571,7 +571,7 @@ public final class MapleMap {
         SpeedRunType type = SpeedRunType.NULL;
         final MapleSquad sqd = getSquadByMap();
         if (mobid == 8810018 && mapid == 240060200) { // Horntail
-          World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "經過無數次的挑戰，"+ chr.getName() +"所帶領的隊伍終於擊破了闇黑龍王的遠征隊！你們才是龍之林的真正英雄~").getBytes());
+            World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "經過無數次的挑戰，" + chr.getName() + "所帶領的隊伍終於擊破了闇黑龍王的遠征隊！你們才是龍之林的真正英雄~").getBytes());
             /*for (MapleCharacter c : getCharactersThreadsafe()) {
              c.finishAchievement(16);
              }*/
@@ -583,7 +583,7 @@ public final class MapleMap {
                 doShrine(true);
             }
         } else if (mobid == 8810122 && mapid == 240060201) { // Horntail
-            World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "經過無數次的挑戰，"+ chr.getName() +"所帶領的隊伍最終擊破了混屯闇黑龍王的遠征隊！你們才是龍之林的真正英雄~").getBytes());
+            World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, "經過無數次的挑戰，" + chr.getName() + "所帶領的隊伍最終擊破了混屯闇黑龍王的遠征隊！你們才是龍之林的真正英雄~").getBytes());
             /*for (MapleCharacter c : getCharactersThreadsafe()) {
              c.finishAchievement(24);
              }*/
@@ -1270,7 +1270,7 @@ public final class MapleMap {
         if (squadSchedule != null) {
             cancelSquadSchedule();
             broadcastMessage(MaplePacketCreator.stopClock());
-            broadcastMessage(MaplePacketCreator.getClock(60000*600));
+            broadcastMessage(MaplePacketCreator.getClock(60000 * 600));
         }
     }
 
@@ -1296,7 +1296,7 @@ public final class MapleMap {
         if (squadSchedule != null) {
             cancelSquadSchedule();
             broadcastMessage(MaplePacketCreator.stopClock());
-			broadcastMessage(MaplePacketCreator.getClock(60000*600));
+            broadcastMessage(MaplePacketCreator.getClock(60000 * 600));
         }
     }
 
@@ -1448,7 +1448,7 @@ public final class MapleMap {
 
             @Override
             public void sendPackets(MapleClient c) {
-              if (summon != null) {
+                if (summon != null) {
                     c.sendPacket(MaplePacketCreator.spawnSummon(summon, true));
                 }
             }
@@ -1489,14 +1489,14 @@ public final class MapleMap {
                          ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false);
                          }
                          }*/
-						int d = 0 ;
+                        int d = 0;
                         for (final MapleMapObject mo : getMapObjectsInRect(mist.getBox(), Collections.singletonList(MapleMapObjectType.MONSTER))) {
                             /*if (mist.makeChanceResult() && ((MapleCharacter) mo).getId() != mist.getOwnerId()) {
                              ((MapleCharacter) mo).setDOT(mist.getSource().getDOT(), mist.getSourceSkill().getId(), mist.getSkillLevel());
                              } else */
-                            if (mist.makeChanceResult() && !((MapleMonster) mo).isBuffed(MonsterStatus.POISON) && ((MapleMonster) mo).getHp() > 1 ) {
-                                ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false  , d  );
-								d += 137;
+                            if (mist.makeChanceResult() && !((MapleMonster) mo).isBuffed(MonsterStatus.POISON) && ((MapleMonster) mo).getHp() > 1) {
+                                ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false, d);
+                                d += 137;
                             }
                         }
                     }
@@ -2230,18 +2230,18 @@ public final class MapleMap {
             case 955000300:
                 em = "AswanOffSeason";
                 break;
-/*      */     case 280030100:
-/* 2829 */       em = "ZakumBattle";
-/* 2830 */       break;
-/*      */     case 272020200:
-/* 2862 */       em = "Akayile";
-/* 2863 */       break;
-/*      */     case 689013000:
-/* 2888 */       em = "PinkZakum";
-/* 2889 */       break;
-/*      */     case 703200400:
-/* 2891 */       em = "0AllBoss";
-/* 2892 */       break;
+            /*      */ case 280030100:
+                /* 2829 */ em = "ZakumBattle";
+                /* 2830 */ break;
+            /*      */ case 272020200:
+                /* 2862 */ em = "Akayile";
+                /* 2863 */ break;
+            /*      */ case 689013000:
+                /* 2888 */ em = "PinkZakum";
+                /* 2889 */ break;
+            /*      */ case 703200400:
+                /* 2891 */ em = "0AllBoss";
+                /* 2892 */ break;
             //case 689010000:
             //    em = "PinkZakumEntrance";
             //    break;
@@ -2253,7 +2253,6 @@ public final class MapleMap {
         }
         return ChannelServer.getInstance(channel).getEventSM().getEventManager(em);
     }
-
 
     public final void removePlayer(final MapleCharacter chr) {
         //log.warn("[dc] [level2] Player {} leaves map {}", new Object[] { chr.getName(), mapid });
@@ -2306,7 +2305,7 @@ public final class MapleMap {
             if (summon.getMovementType() == SummonMovementType.STATIONARY || summon.getMovementType() == SummonMovementType.CIRCLE_STATIONARY || summon.getMovementType() == SummonMovementType.WALK_STATIONARY) {
                 cancelSummons = true;
             } else {
-				broadcastMessage(MaplePacketCreator.removeSummon(summon, true));
+                broadcastMessage(MaplePacketCreator.removeSummon(summon, true));
                 summon.setChangedMap(true);
                 removeMapObject(summon);
             }
@@ -2787,8 +2786,16 @@ public final class MapleMap {
             }
         } else {
             final int numShouldSpawn = maxRegularSpawn - spawnedMonstersOnMap.get();
-            if (numShouldSpawn > 0) {
-                int spawned = 0;
+            if (numShouldSpawn > 0 && monsterSpawn.size() > 0) {
+                final List<Spawns> randomSpawn = new ArrayList<>(monsterSpawn);
+                Collections.shuffle(randomSpawn);
+                for (Spawns spawnPoint : randomSpawn) {
+                    if (spawnPoint.shouldSpawn() || GameConstants.isForceRespawn(mapid)) {
+                        spawnPoint.spawnMonster(this);
+                    }
+                }
+
+                /* int spawned = 0;
 
                 final List<Spawns> randomSpawn = new ArrayList<Spawns>(monsterSpawn);
                 Collections.shuffle(randomSpawn);
@@ -2801,7 +2808,7 @@ public final class MapleMap {
                     if (spawned >= numShouldSpawn) {
                         break;
                     }
-                }
+                }*/
             }
         }
     }

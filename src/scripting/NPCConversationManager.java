@@ -434,14 +434,14 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public int gainGachaponItem(int id, int quantity) {
-        return gainGachaponItem(id, quantity, c.getPlayer().getMap().getStreetName() + " - " + c.getPlayer().getMap().getMapName() , false);
-    }
-	
-	public int gainGachaponItem(int id, int quantity, final boolean broad) {
-        return gainGachaponItem(id, quantity, c.getPlayer().getMap().getStreetName() + " - " + c.getPlayer().getMap().getMapName() , broad);
+        return gainGachaponItem(id, quantity, c.getPlayer().getMap().getStreetName() + " - " + c.getPlayer().getMap().getMapName(), false);
     }
 
-    public int gainGachaponItem(int id, int quantity, final String msg , final boolean broad ) {
+    public int gainGachaponItem(int id, int quantity, final boolean broad) {
+        return gainGachaponItem(id, quantity, c.getPlayer().getMap().getStreetName() + " - " + c.getPlayer().getMap().getMapName(), broad);
+    }
+
+    public int gainGachaponItem(int id, int quantity, final String msg, final boolean broad) {
         try {
             if (!MapleItemInformationProvider.getInstance().itemExists(id)) {
                 return -1;
@@ -452,8 +452,8 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
                 return -1;
             }
             final byte rareness = GameConstants.gachaponRareItem(item.getItemId());
-            if (rareness > 0 || broad ) {
-                World.Broadcast.broadcastMessage(MaplePacketCreator.getGachaponMega("[" + msg + "] " + c.getPlayer().getName(), " : 從轉蛋機轉到了!", item, rareness,c.getChannel()-1).getBytes());
+            if (rareness > 0 || broad) {
+                World.Broadcast.broadcastMessage(MaplePacketCreator.getGachaponMega("[" + msg + "] " + c.getPlayer().getName(), " : 從轉蛋機轉到了!", item, rareness, c.getChannel() - 1).getBytes());
             }
             return item.getItemId();
         } catch (Exception e) {
@@ -716,9 +716,11 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
             squad.acceptMember(pos);
         }
     }
+
     public String getReadableMillis(long startMillis, long endMillis) {
         return StringUtil.getReadableMillis(startMillis, endMillis);
     }
+
     public int addMember(String type, boolean join) {
         final MapleSquad squad = c.getChannelServer().getMapleSquad(type);
         if (squad != null) {
@@ -759,33 +761,33 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     }
 
     public void increaseGuildCapacity(boolean UseGP) {
-		if(!UseGP){
-			if (c.getPlayer().getMeso() < 250000) {
-				c.sendPacket(MaplePacketCreator.serverNotice(1, "你沒有足夠的錢"));
-				return;
-			}
-			if(c.getPlayer().getGuild().getCapacity() >= 100){
-				c.sendPacket(MaplePacketCreator.serverNotice(1, "公會人數已經擴充超過100"));
-				return;
-			}
-			final int gid = c.getPlayer().getGuildId();
-			if (gid <= 0) {
-				return;
-			}
-			World.Guild.increaseGuildCapacity(gid);
-			c.getPlayer().gainMeso(-250000, true, false, true);
-		}else{
-			if (c.getPlayer().getGuild().getGP() < 2500) {
-            c.sendPacket(MaplePacketCreator.serverNotice(1, "公會的GP不足."));
-				return;
-			}
-			final int gid = c.getPlayer().getGuildId();
-			if (gid <= 0) {
-				return;
-			}
-			World.Guild.increaseGuildCapacity(gid);
-			c.getPlayer().getGuild().gainGP(-2500);
-		}
+        if (!UseGP) {
+            if (c.getPlayer().getMeso() < 250000) {
+                c.sendPacket(MaplePacketCreator.serverNotice(1, "你沒有足夠的錢"));
+                return;
+            }
+            if (c.getPlayer().getGuild().getCapacity() >= 100) {
+                c.sendPacket(MaplePacketCreator.serverNotice(1, "公會人數已經擴充超過100"));
+                return;
+            }
+            final int gid = c.getPlayer().getGuildId();
+            if (gid <= 0) {
+                return;
+            }
+            World.Guild.increaseGuildCapacity(gid);
+            c.getPlayer().gainMeso(-250000, true, false, true);
+        } else {
+            if (c.getPlayer().getGuild().getGP() < 2500) {
+                c.sendPacket(MaplePacketCreator.serverNotice(1, "公會的GP不足."));
+                return;
+            }
+            final int gid = c.getPlayer().getGuildId();
+            if (gid <= 0) {
+                return;
+            }
+            World.Guild.increaseGuildCapacity(gid);
+            c.getPlayer().getGuild().gainGP(-2500);
+        }
     }
 
     public void displayGuildRanks() {
@@ -884,7 +886,8 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         }
         c.getPlayer().equipChanged();
     }
-        public void killAllMonsters() {
+
+    public void killAllMonsters() {
         MapleMap map = c.getPlayer().getMap();
         double range = Double.POSITIVE_INFINITY;
         MapleMonster mob;
@@ -925,12 +928,14 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         }
         c.getPlayer().gainMeso((int) mesos, true);
     }
-    public void dc () {
+
+    public void dc() {
         MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(c.getPlayer().getName().toString());
         victim.getClient().getSession().close();
         victim.getClient().disconnect(true, false);
 
     }
+
     public long getMerchantMesos() {
         long mesos = 0;
         try {
@@ -961,8 +966,9 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         c.getPlayer().setConversation(3);
         c.sendPacket(PlayerShopPacket.merchItemStore((byte) 0x22));
     }
-	public void openFishingItemStore() {
-		c.getPlayer().setConversation(6);
+
+    public void openFishingItemStore() {
+        c.getPlayer().setConversation(6);
         HiredFishingHandler.OpenFishingItemStore(c);
     }
 
@@ -1269,14 +1275,15 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
     public final void setLastMsg(final byte last) {
         this.lastMsg = last;
     }
-    
+
     public int getBossLog(String bossid) {
         return getPlayer().getBossLog(bossid);
     }
+
     public void setBossLog(String bossid) {
         getPlayer().setBossLog(bossid);
     }
-    
+
     public final void maxAllSkills() {
         for (ISkill skil : SkillFactory.getAllSkills()) {
             if (GameConstants.isApplicableSkill(skil.getId())) { //no db/additionals/resistance skills
@@ -1376,13 +1383,13 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
         }, 20000); //10 sec 10 sec
     }
 
-
     public void 開啟小鋼珠(int type) {
         c.sendPacket(MaplePacketCreator.openBeans(getPlayer().getBeans(), type));
     }
+
     public void worldMessage(String text) {
-              World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, text).getBytes());
-            }
+        World.Broadcast.broadcastMessage(MaplePacketCreator.serverNotice(6, text).getBytes());
+    }
 
     public int getBeans() {
         return getClient().getPlayer().getBeans();

@@ -33,6 +33,7 @@ import client.MapleClient;
 import client.inventory.MapleInventoryType;
 import client.inventory.MaplePet;
 import client.MapleQuestStatus;
+import client.inventory.IItem;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
@@ -816,15 +817,12 @@ public abstract class AbstractPlayerInteraction {
         c.sendPacket(MaplePacketCreator.instantMapWarp((byte) 6));
     }
 
-	
     public final boolean dojoAgent_NextMap(final boolean dojo, final boolean fromresting) {
         if (dojo) {
             return Event_DojoAgent.warpNextMap(c.getPlayer(), fromresting, c.getPlayer().getMap());
         }
         return Event_DojoAgent.warpNextMap_Agent(c.getPlayer(), fromresting);
     }
-
-
 
     public final boolean dojoAgent_NextMap(final boolean dojo, final boolean fromresting, final int mapid) {
         if (dojo) {
@@ -833,7 +831,6 @@ public abstract class AbstractPlayerInteraction {
         return Event_DojoAgent.warpNextMap_Agent(c.getPlayer(), fromresting);
     }
 
-	
     public final int dojo_getPts() {
         return c.getPlayer().getDojo();
     }
@@ -938,7 +935,7 @@ public abstract class AbstractPlayerInteraction {
         return MapleItemInformationProvider.getInstance().getName(id);
     }
 
-    public void gainPet(int id, String name, int level, int closeness, int fullness, long period , short flag) {
+    public void gainPet(int id, String name, int level, int closeness, int fullness, long period, short flag) {
         if (id > 5000200 || id < 5000000) {
             id = 5000000;
         }
@@ -1038,5 +1035,17 @@ public abstract class AbstractPlayerInteraction {
 
     public boolean getTempFlag(final int flag) {
         return (c.getChannelServer().getTempFlag() & flag) == flag;
+    }
+
+    public final void gainItemMinute(final int itemId, final short quantity, final int minute) {
+        final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+        if (GameConstants.getInventoryType(itemId).equals(MapleInventoryType.EQUIP)) {
+            Equip eq = (Equip) ii.getEquipById(itemId);
+            if (minute > 0) {
+                eq.setExpiration(System.currentTimeMillis() + (long) (minute * 60 * 1000));
+            }
+            MapleInventoryManipulator.addbyItem(getClient(), eq.copy());
+        }
+        getClient().sendPacket(MaplePacketCreator.getShowItemGain(itemId, quantity, true));
     }
 }
