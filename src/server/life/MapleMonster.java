@@ -390,14 +390,14 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
         switch (getId()) {
             case 9400121:
-                //achievement = 12;
+            //achievement = 12;
             //break;
             case 8500002:
-                //achievement = 13;
+            //achievement = 13;
             //break;
             case 8510000:
             case 8520000:
-                //achievement = 14;
+            //achievement = 14;
             //break;
             default:
                 break;
@@ -726,20 +726,12 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         }
         return stats.getEffectiveness(e);
     }
-	
+
     public final void applyStatus(final MapleCharacter from, final MonsterStatusEffect status, final boolean poison, final long duration, final boolean venom) {
-        applyStatus(from, status, poison, duration, venom, true , 0);
-    }
-	
-	public final void applyStatus(final MapleCharacter from, final MonsterStatusEffect status, final boolean poison, final long duration, final boolean venom , final int delay) {
-        applyStatus(from, status, poison, duration, venom, true , delay );
-    }
-	
-	public final void applyStatus(final MapleCharacter from, final MonsterStatusEffect status, final boolean poison, final long duration, final boolean venom , final boolean checkboss) {
-        applyStatus(from, status, poison, duration, venom, checkboss , 0 );
+        applyStatus(from, status, poison, duration, venom, true);
     }
 
-    public final void applyStatus(final MapleCharacter from, final MonsterStatusEffect status, final boolean poison, final long duration, final boolean venom, final boolean checkboss , final int delay) {
+    public final void applyStatus(final MapleCharacter from, final MonsterStatusEffect status, final boolean poison, final long duration, final boolean venom, final boolean checkboss) {
         if (!isAlive()) {
             return;
         }
@@ -816,7 +808,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         };
         if (poison && getHp() > 1) {
             final int poisonDamage = (int) Math.min(Short.MAX_VALUE, (long) (getMobMaxHp() / (70.0 - from.getSkillLevel(status.getSkill())) + 0.999));
-            status.setValue(MonsterStatus.POISON, Integer.valueOf(poisonDamage));
+            status.setValue(MonsterStatus.POISON, poisonDamage);
             status.setPoisonSchedule(timerManager.register(new PoisonTask(poisonDamage, from, status, cancelTask, false), 1000, 1000));
         } else if (venom) {
             int poisonLevel = 0;
@@ -879,16 +871,12 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         }
 
         stati.put(stat, status);
-		
-        if(poison){
-			status.setPoisonStatusSchedule(timerManager.schedule(new ApplyMonsterStatusDelay(from,getController(),getObjectId(),status,getPosition(),this), delay));
-		}else{
-			map.broadcastMessage(MobPacket.applyMonsterStatus(getObjectId(), status), getPosition());
-			if (getController() != null && !getController().isMapObjectVisible(this)) {
-				getController().getClient().sendPacket(MobPacket.applyMonsterStatus(getObjectId(), status));
-			}
-		}
-		
+
+        map.broadcastMessage(MobPacket.applyMonsterStatus(getObjectId(), status), getPosition());
+        if (getController() != null && !getController().isMapObjectVisible(this)) {
+            getController().getClient().sendPacket(MobPacket.applyMonsterStatus(getObjectId(), status));
+        }
+
         int aniTime = 0;
         if (skilz != null) {
             aniTime = skilz.getAnimationTime();
@@ -1019,37 +1007,6 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         return stats.getBuffToGive();
     }
 
-	
-	private final class ApplyMonsterStatusDelay implements Runnable {
-
-        private final MapleCharacter controller;
-	private final MapleCharacter chr;
-        private final int oid;
-        private final MonsterStatusEffect status;
-        private Point position;
-        private final MapleMap map;
-        private final MapleMonster monster;
-
-        private ApplyMonsterStatusDelay(final MapleCharacter chr ,final MapleCharacter Controller, final int oid, final MonsterStatusEffect status , final Point position ,final MapleMonster mon ) {
-			this.chr = chr ;
-            this.controller = Controller;
-            this.oid = oid;
-            this.status = status;
-	        this.position = position ;
-	        this.map = chr.getMap();
-                this.monster = mon;
-        }
-
-        @Override
-        public void run() {
-            map.broadcastMessage(MobPacket.applyMonsterStatus(oid, status), position );
-            if (controller != null && !controller.isMapObjectVisible(monster)) {
-            	controller.getClient().sendPacket(MobPacket.applyMonsterStatus(oid, status));
-            }
-        }
-    }
-	
-	
     private final class PoisonTask implements Runnable {
 
         private final int poisonDamage;
@@ -1332,8 +1289,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                         }
                     }
                 }
-				double expBonus = 1.0;
-				
+                double expBonus = 1.0;
+
                 if (expApplicable.size() > 1) {
                     expBonus = 1.10 + 0.05 * expApplicable.size();
                     averagePartyLevel /= expApplicable.size();

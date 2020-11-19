@@ -1489,14 +1489,12 @@ public final class MapleMap {
                          ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false);
                          }
                          }*/
-                        int d = 0;
                         for (final MapleMapObject mo : getMapObjectsInRect(mist.getBox(), Collections.singletonList(MapleMapObjectType.MONSTER))) {
                             /*if (mist.makeChanceResult() && ((MapleCharacter) mo).getId() != mist.getOwnerId()) {
                              ((MapleCharacter) mo).setDOT(mist.getSource().getDOT(), mist.getSourceSkill().getId(), mist.getSkillLevel());
                              } else */
                             if (mist.makeChanceResult() && !((MapleMonster) mo).isBuffed(MonsterStatus.POISON) && ((MapleMonster) mo).getHp() > 1) {
-                                ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false, d);
-                                d += 137;
+                                ((MapleMonster) mo).applyStatus(owner, new MonsterStatusEffect(MonsterStatus.POISON, 1, mist.getSourceSkill().getId(), null, false), true, duration, false);
                             }
                         }
                     }

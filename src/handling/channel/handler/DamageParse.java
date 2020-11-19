@@ -177,8 +177,6 @@ public class DamageParse {
         MapleMonster monster;
         MapleMonsterStats monsterstats;
         boolean Tempest;
-		int d = 0;
-		
         for (final AttackPair oned : attack.allDamage) {
             monster = map.getMonsterByOid(oned.objectid);
 
@@ -345,7 +343,7 @@ public class DamageParse {
                                         if (monster.getVenomMulti() < 3) {
                                             monster.setVenomMulti((byte) (monster.getVenomMulti() + 1));
                                             monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.POISON, 1, 4120005, null, false);
-                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration() + d, true);
+                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration(), true);
                                         }
                                     }
                                 }
@@ -358,7 +356,7 @@ public class DamageParse {
                                         if (monster.getVenomMulti() < 3) {
                                             monster.setVenomMulti((byte) (monster.getVenomMulti() + 1));
                                             monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.POISON, 1, 4220005, null, false);
-                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration() + d, true);
+                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration(), true);
                                         }
                                     }
                                 }
@@ -371,7 +369,7 @@ public class DamageParse {
                                         if (monster.getVenomMulti() < 3) {
                                             monster.setVenomMulti((byte) (monster.getVenomMulti() + 1));
                                             monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.POISON, 1, 4340001, null, false);
-                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration() + d, true);
+                                            monster.applyStatus(player, monsterStatusEffect, false, venomEffect.getDuration(), true);
                                         }
                                     }
                                 }
@@ -401,14 +399,14 @@ public class DamageParse {
                             if (player.getBuffedValue(MapleBuffStat.WK_CHARGE) != null && !monster.getStats().isBoss()) {
                                 final MapleStatEffect eff = player.getStatForBuff(MapleBuffStat.WK_CHARGE);
                                 if (eff != null && eff.getSourceId() == 21111005) {
-                                    monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.SPEED, eff.getX(), eff.getSourceId(), null, false), false, eff.getY() * 1000 + d, false);
+                                    monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.SPEED, eff.getX(), eff.getSourceId(), null, false), false, eff.getY() * 1000, false);
                                 }
                             }
                             if (player.getBuffedValue(MapleBuffStat.BODY_PRESSURE) != null && !monster.getStats().isBoss()) {
                                 final MapleStatEffect eff = player.getStatForBuff(MapleBuffStat.BODY_PRESSURE);
 
                                 if (eff != null && eff.makeChanceResult() && !monster.isBuffed(MonsterStatus.NEUTRALISE)) {
-                                    monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.NEUTRALISE, 1, eff.getSourceId(), null, false), false, eff.getX() * 1000 + d, false);
+                                    monster.applyStatus(player, new MonsterStatusEffect(MonsterStatus.NEUTRALISE, 1, eff.getSourceId(), null, false), false, eff.getX() * 1000, false);
                                 }
                             }
                             break;
@@ -422,7 +420,7 @@ public class DamageParse {
                             MonsterStatus stat = GameConstants.getStatFromWeapon(weapon_.getItemId()); //10001 = acc/darkness. 10005 = speed/slow.
                             if (stat != null && Randomizer.nextInt(100) < GameConstants.getStatChance()) {
                                 final MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(stat, GameConstants.getXForStat(stat), GameConstants.getSkillForStat(stat), null, false);
-                                monster.applyStatus(player, monsterStatusEffect, false, 10000 + d , false, false);
+                                monster.applyStatus(player, monsterStatusEffect, false, 10000 , false, false);
                             }
                         }
 
@@ -431,7 +429,7 @@ public class DamageParse {
 
                             if (eff.makeChanceResult()) {
                                 final MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.ACC, eff.getX(), eff.getSourceId(), null, false);
-                                monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 1000 + d , false);
+                                monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 1000 , false);
                             }
 
                         }
@@ -441,7 +439,7 @@ public class DamageParse {
 
                             if (eff.makeChanceResult()) {
                                 final MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.SPEED, eff.getX(), 3121007, null, false);
-                                monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 1000 + d , false);
+                                monster.applyStatus(player, monsterStatusEffect, false, eff.getY() * 1000 , false);
                             }
                         }
                         if (player.getJob() == 121) { // WHITEKNIGHT
@@ -449,7 +447,7 @@ public class DamageParse {
                                 final ISkill skill = SkillFactory.getSkill(charge);
                                 if (player.isBuffFrom(MapleBuffStat.WK_CHARGE, skill)) {
                                     final MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(MonsterStatus.FREEZE, 1, charge, null, false);
-                                    monster.applyStatus(player, monsterStatusEffect, false, skill.getEffect(player.getSkillLevel(skill)).getY() * 2000  + d , false);
+                                    monster.applyStatus(player, monsterStatusEffect, false, skill.getEffect(player.getSkillLevel(skill)).getY() * 2000  , false);
                                     break;
                                 }
                             }
@@ -458,13 +456,12 @@ public class DamageParse {
                     if (effect != null && effect.getMonsterStati().size() > 0) {
                         if (effect.makeChanceResult()) {
                             for (Map.Entry<MonsterStatus, Integer> z : effect.getMonsterStati().entrySet()) {
-                                monster.applyStatus(player, new MonsterStatusEffect(z.getKey(), z.getValue(), theSkill.getId(), null, false), effect.isPoison(), effect.getDuration() + d , false , d );
+                                monster.applyStatus(player, new MonsterStatusEffect(z.getKey(), z.getValue(), theSkill.getId(), null, false), effect.isPoison(), effect.getDuration() , false);
                             }
                         }
                     }
                 }
             }
-			d+=50;
         }
         if (attack.skill == 4331003 && totDamageToOneMonster < hpMob) {
             return;
@@ -550,7 +547,6 @@ public class DamageParse {
 
         final MapleMap map = player.getMap();
 
-		int d = 0;
         for (final AttackPair oned : attack.allDamage) {
             final MapleMonster monster = map.getMonsterByOid(oned.objectid);
 
@@ -622,16 +618,16 @@ public class DamageParse {
                     // effects
                     switch (attack.skill) {
                         case 2221003:
-                            monster.setTempEffectiveness(Element.FIRE, theSkill.getEffect(player.getSkillLevel(theSkill)).getDuration() + d );
+                            monster.setTempEffectiveness(Element.FIRE, theSkill.getEffect(player.getSkillLevel(theSkill)).getDuration() );
                             break;
                         case 2121003:
-                            monster.setTempEffectiveness(Element.ICE, theSkill.getEffect(player.getSkillLevel(theSkill)).getDuration() + d);
+                            monster.setTempEffectiveness(Element.ICE, theSkill.getEffect(player.getSkillLevel(theSkill)).getDuration());
                             break;
                     }
                     if (effect != null && effect.getMonsterStati().size() > 0) {
                         if (effect.makeChanceResult()) {
                             for (Map.Entry<MonsterStatus, Integer> z : effect.getMonsterStati().entrySet()) {
-                                monster.applyStatus(player, new MonsterStatusEffect(z.getKey(), z.getValue(), theSkill.getId(), null, false), effect.isPoison(), effect.getDuration() + d , false , d );
+                                monster.applyStatus(player, new MonsterStatusEffect(z.getKey(), z.getValue(), theSkill.getId(), null, false), effect.isPoison(), effect.getDuration() , false);
                             }
                         }
                     }
@@ -640,7 +636,6 @@ public class DamageParse {
                     }
                 }
             }
-			d+=50;
         }
         if (attack.skill != 2301002) {
             effect.applyTo(player);
