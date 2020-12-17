@@ -1,8 +1,6 @@
 package server;
 
 import client.SkillFactory;
-import constants.ServerConstants;
-import handling.MapleServerHandler;
 import handling.channel.ChannelServer;
 import handling.channel.MapleGuildRanking;
 import handling.login.LoginServer;
@@ -13,14 +11,12 @@ import java.sql.SQLException;
 import database.DatabaseConnection;
 import handling.world.family.MapleFamilyBuff;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import server.Timer.*;
 import server.events.MapleOxQuizFactory;
 import server.life.MapleLifeFactory;
+import server.life.MapleMonsterInformationProvider;
 import server.quest.MapleQuest;
 
 public class Start {
@@ -57,6 +53,11 @@ public class Start {
         MapleItemInformationProvider.getInstance().load();
         System.out.println("[載入髮型臉部物件]");
         MapleItemInformationProvider.getInstance().loadStyles(false);
+        //
+        System.out.println("[載入掉落物資料]");
+        MapleMonsterInformationProvider.getInstance().loadGlobalDropData();
+        MapleMonsterInformationProvider.getInstance().loadDropData();
+        //
         RandomRewards.getInstance();
         SkillFactory.getSkill(99999999);
         MapleOxQuizFactory.getInstance().initialize();

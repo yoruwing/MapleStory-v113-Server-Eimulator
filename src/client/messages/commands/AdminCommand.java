@@ -2733,8 +2733,8 @@ public class AdminCommand {
 
         @Override
         public int execute(MapleClient c, String[] splitted) {
-            MapleMonsterInformationProvider.getInstance().clearDrops();
             ReactorScriptManager.getInstance().clearDrops();
+            MapleMonsterInformationProvider.getInstance().reloadDropData();
             return 1;
         }
     }
