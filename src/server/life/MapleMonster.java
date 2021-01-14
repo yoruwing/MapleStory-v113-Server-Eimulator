@@ -1380,7 +1380,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         final int level = chr.getSkillLevel(steal);
         if (level > 0 && !getStats().isBoss() && stolen == -1 && steal.getEffect(level).makeChanceResult()) {
             final MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
-            final List<MonsterDropEntry> dropEntry = new ArrayList<MonsterDropEntry>(mi.retrieveDrop(getId()));
+            final List<MonsterDropEntry> dropEntry = new ArrayList<>(mi.retrieveDrop(getId()));
             Collections.shuffle(dropEntry);
             IItem idrop;
             for (MonsterDropEntry d : dropEntry) {
