@@ -2726,13 +2726,13 @@ public class MaplePacketCreator {
             if (partychar.getChannel() == forchannel && !leaving) {
                 lew.writeInt(partychar.getDoorTown());
                 lew.writeInt(partychar.getDoorTarget());
-                lew.writeInt(partychar.getDoorSkill());
                 lew.writeInt(partychar.getDoorPosition().x);
                 lew.writeInt(partychar.getDoorPosition().y);
             } else {
                 lew.writeInt(leaving ? 999999999 : 0);
-                lew.writeLong(leaving ? 999999999 : 0);
-                lew.writeLong(leaving ? -1 : 0);
+                lew.writeInt(leaving ? 999999999 : 0);
+                lew.writeInt(leaving ? -1 : 0);
+                lew.writeInt(leaving ? -1 : 0);
             }
         }
     }
@@ -2785,10 +2785,9 @@ public class MaplePacketCreator {
 
         mplew.writeShort(SendPacketOpcode.PARTY_OPERATION.getValue());
         mplew.write(0x24);
-        mplew.write(0);//??
+        mplew.write(0);
         mplew.writeInt(townId);
         mplew.writeInt(targetId);
-//        mplew.writeInt(skillId);
         mplew.writePos(position);
 
         return mplew.getPacket();
