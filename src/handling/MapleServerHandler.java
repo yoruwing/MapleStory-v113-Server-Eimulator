@@ -810,7 +810,6 @@ public class MapleServerHandler extends ChannelInboundHandlerAdapter {
                 MTSOperation.MTSOperation(slea, c);
                 break;
             case DAMAGE_SUMMON:
-                slea.skip(4);
                 SummonHandler.DamageSummon(slea, c.getPlayer());
                 break;
             case MOVE_SUMMON:

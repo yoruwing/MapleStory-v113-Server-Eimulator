@@ -2871,12 +2871,12 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static MaplePacket damageSummon(int cid, int summonSkillId, int damage, int unkByte, int monsterIdFrom) {
+    public static MaplePacket damageSummon(int cid, int summonObjectId, int damage, int unkByte, int monsterIdFrom) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         mplew.writeShort(SendPacketOpcode.DAMAGE_SUMMON.getValue());
         mplew.writeInt(cid);
-        mplew.writeInt(summonSkillId);
+        mplew.writeInt(summonObjectId);
         mplew.write(unkByte);
         mplew.writeInt(damage);
         mplew.writeInt(monsterIdFrom);

@@ -102,7 +102,6 @@ public class DatabaseConnection {
     public static final void closeAll() throws SQLException {
         for (final Connection con : ThreadLocalConnection.allConnections) {
             con.close();
-
         }
     }
 
