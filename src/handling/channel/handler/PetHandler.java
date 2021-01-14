@@ -49,8 +49,8 @@ public class PetHandler {
 
     public static final void SpawnPet(final SeekableLittleEndianAccessor slea, final MapleClient c, final MapleCharacter chr) {
         chr.updateTick(slea.readInt());
-		final byte slot = slea.readByte();
-		slea.skip(1);
+        final byte slot = slea.readByte();
+        slea.skip(1);
         chr.spawnPet(slot, slea.readByte() > 0);
 
     }
@@ -144,8 +144,16 @@ public class PetHandler {
             return;
         }
 
-        slea.skip(6);
+        slea.readInt();
+        short slot = slea.readShort();
         final int itemId = slea.readInt();
+        IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+
+        if (toUse == null || toUse.getItemId() != itemId || itemId / 10000 != 212) {
+            c.getPlayer().dropMessage(1, "Error ItemId " + itemId);
+            c.sendPacket(MaplePacketCreator.enableActions());
+            return;
+        }
 
         boolean gainCloseness = false;
 
@@ -189,7 +197,7 @@ public class PetHandler {
             c.sendPacket(PetPacket.updatePet(pet, chr.getInventory(MapleInventoryType.CASH).getItem((byte) pet.getInventoryPosition())));
             chr.getMap().broadcastMessage(chr, PetPacket.commandResponse(chr.getId(), (byte) 1, chr.getPetIndex(pet), false, true), true);
         }
-        MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, false);
+        MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, (short) slot, (short) 1, true, false);
         c.sendPacket(MaplePacketCreator.enableActions());
     }
 
