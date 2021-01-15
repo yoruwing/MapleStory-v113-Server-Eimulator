@@ -46,6 +46,7 @@ public class Start {
         CloneTimer.getInstance().start();
         EventTimer.getInstance().start();
         BuffTimer.getInstance().start();
+        PingTimer.getInstance().start();
         LoginInformationProvider.getInstance();
         MapleQuest.initQuests();
         MapleLifeFactory.loadQuestCounts();
