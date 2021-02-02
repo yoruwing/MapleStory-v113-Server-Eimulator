@@ -2754,6 +2754,7 @@ public class AdminCommand {
         @Override
         public int execute(MapleClient c, String[] splitted) {
             MapleShopFactory.getInstance().clear();
+            c.getPlayer().dropMessage("重新載入商店完成");
             return 1;
         }
     }
