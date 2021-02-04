@@ -1891,6 +1891,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     }
 
     public void cancelAllBuffs_() {
+        cancelAllBuffs();
         effects.clear();
         cancelAllTimers();
     }
