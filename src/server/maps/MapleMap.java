@@ -445,7 +445,7 @@ public final class MapleMap {
         }
 
         final MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
-        List<MonsterDropEntry> originData = mi.retrieveDrop(getId());
+        List<MonsterDropEntry> originData = mi.retrieveDrop(mob.getId());
         boolean hasMesoDropped = false;
         if (originData != null) {
             final List<MonsterDropEntry> dropEntry = new ArrayList<>(originData);
