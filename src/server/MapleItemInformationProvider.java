@@ -1417,7 +1417,7 @@ public class MapleItemInformationProvider {
         return ret;
     }
 	public short getPetFlagInfo(int itemId) {
-		System.out.println("ItemID = " + itemId);
+//		System.out.println("ItemID = " + itemId);
         if (this.petFlagInfo.containsKey(itemId)) {
             return (this.petFlagInfo.get(itemId));
         }
