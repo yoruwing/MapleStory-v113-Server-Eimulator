@@ -22,7 +22,6 @@ package handling.cashshop;
 
 import java.net.InetSocketAddress;
 
-import handling.MapleServerHandler;
 import handling.channel.PlayerStorage;
 import handling.netty.ServerConnection;
 
@@ -33,7 +32,6 @@ public class CashShopServer {
 
     private static ServerConnection init;
     private static String ip;
-    private static InetSocketAddress InetSocketadd;
     private final static int PORT = 8596;
     private static PlayerStorage players, playersMTS;
     private static boolean finishedShutdown = false;
