@@ -32,13 +32,13 @@ public class CashShopServer {
 
     private static ServerConnection init;
     private static String ip;
-    private final static int PORT = 8596;
+    private  static int PORT = 8596;
     private static PlayerStorage players, playersMTS;
     private static boolean finishedShutdown = false;
 
     public static final void run_startup_configurations() {
+        PORT = ServerProperties.getIntProperty("tms.CPort", "8596");
         ip = ServerProperties.getProperty("tms.IP") + ":" + PORT;
-
         try {
             init = new ServerConnection(PORT, 1, -10);//could code world here to seperate them
             init.run();
@@ -46,9 +46,9 @@ public class CashShopServer {
             playersMTS = new PlayerStorage(-20);
             System.out.println("Shop    1: Listening on port " + PORT);
         } catch (final Exception e) {
-            System.err.println("Binding to port " + PORT + " failed");
+            System.err.println("綁定端口 " + PORT + " 失敗");
             e.printStackTrace();
-            throw new RuntimeException("Binding failed.", e);
+            throw new RuntimeException("綁定失敗.", e);
         }
     }
 
