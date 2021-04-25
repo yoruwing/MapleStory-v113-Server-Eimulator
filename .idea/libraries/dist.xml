@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="dist">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/slf4j-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/mysql-connector-java-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/slf4j-jdk14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/netty-all-4.1.15.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/local_policy.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/US_export_policy.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
